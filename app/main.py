@@ -2,52 +2,58 @@ import sys
 import os
 
 
-def on_type(args):
-    unknown_2 = lambda command: print(f"{command}: not found")
-
-    command = args[1]
-    if command in builtins:
-        print(f"{command} is a shell builtin")
-        return
-    
+def find_in_path(command: str) -> str | None:
     path = os.environ.get("PATH")
     if path is None:
-        unknown_2(command)
-        return
+        return None
 
     for p in path.split(":"):
         if not p.endswith("/"):
             p += "/"
         filename = p + command
         if os.path.exists(filename):
-            print(f"{command} is {filename}")
-            return
+            return filename
 
-    unknown_2(command)
+    return None
+
+def on_type(args: list[str]) -> None:
+    command = args[1]
+    if command in builtins:
+        print(f"{command} is a shell builtin")
+        return
+    
+    filename = find_in_path(command)
+    if filename is not None:
+        print(f"{command} is {filename}")
+        return
+    
+    print(f"{command}: not found")
 
 builtins = {
     "exit": lambda args: sys.exit(int(args[1])),
     "echo": lambda args: print(" ".join(args[1:])),
     "type": on_type,
 }
-unknown = lambda command: print(f"{command}: command not found")
 
 
-
-def main():
-
+def main() -> None:
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
         # Wait for user input
         args = input().split()
         command = args[0]
-        action = builtins.get(command, None)
+        action = builtins.get(command)
         if action is not None:
             action(args)
             continue
 
-        unknown(command)
+        filename = find_in_path(command)
+        if filename is not None:
+            os.system(filename)
+            continue
+
+        print(f"{command}: command not found")
 
 
 if __name__ == "__main__":
