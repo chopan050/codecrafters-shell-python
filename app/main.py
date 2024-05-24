@@ -48,7 +48,7 @@ def run_default(args: list[str]) -> None:
     print(f"{command}: command not found")
 
 
-builtins = {
+shell_builtins = {
     "exit": run_builtin_exit,
     "echo": run_builtin_echo,
     "type": run_builtin_type,
@@ -60,8 +60,8 @@ def main() -> None:
         sys.stdout.flush()
         # Wait for user input
         args = input().split()
-        action = builtins.get(args[0], run_default)
-        action(args)
+        run_action = shell_builtins.get(args[0], run_default)
+        run_action(args)
 
 
 if __name__ == "__main__":
