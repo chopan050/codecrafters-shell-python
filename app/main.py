@@ -3,6 +3,8 @@ import os
 
 
 def on_type(args):
+    unknown_2 = lambda command: print(f"{command}: not found")
+
     command = args[1]
     if command in builtins:
         print(f"{command} is a shell builtin")
@@ -10,7 +12,7 @@ def on_type(args):
     
     path = os.environ.get("PATH")
     if path is None:
-        unknown(command)
+        unknown_2(command)
         return
 
     for p in path.split(":"):
@@ -21,7 +23,7 @@ def on_type(args):
             print(f"{command} is {filename}")
             return
 
-    unknown(command)
+    unknown_2(command)
 
 builtins = {
     "exit": lambda args: sys.exit(int(args[1])),
