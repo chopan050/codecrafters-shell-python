@@ -2,10 +2,9 @@ import sys
 
 
 def main():
-    sys.stdout.write("$ ")
-    sys.stdout.flush()
-
     while True:
+        sys.stdout.write("$ ")
+        sys.stdout.flush()
         # Wait for user input
         args = input().split()
         if True:
