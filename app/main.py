@@ -3,11 +3,11 @@ import os
 
 
 def find_in_path(command: str) -> str | None:
-    path = os.environ.get("PATH")
-    if path is None:
+    env_path = os.environ.get("PATH")
+    if env_path is None:
         return None
 
-    for p in path.split(":"):
+    for p in env_path.split(":"):
         if not p.endswith("/"):
             p += "/"
         filename = p + command
