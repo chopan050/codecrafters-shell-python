@@ -9,7 +9,9 @@ def main():
         args = input().split()
         if args[0] == "exit":
             sys.exit(int(args[1]))
-        if True:
+        elif args[0] == "echo":
+            print(" ".join(args[1:]))
+        else:
             print(f"{args[0]}: command not found")
 
 
