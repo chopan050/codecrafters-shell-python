@@ -2,7 +2,10 @@ import sys
 import os
 
 
-def find_in_path(command: str) -> str | None:
+def find_in_filesystem(command: str) -> str | None:
+    if os.path.exists(command):
+        return command
+
     path = os.environ.get("PATH")
     if path is None:
         return None
@@ -22,7 +25,7 @@ def on_type(args: list[str]) -> None:
         print(f"{command} is a shell builtin")
         return
     
-    filename = find_in_path(command)
+    filename = find_in_filesystem(command)
     if filename is not None:
         print(f"{command} is {filename}")
         return
@@ -48,7 +51,7 @@ def main() -> None:
             action(args)
             continue
 
-        filename = find_in_path(command)
+        filename = find_in_filesystem(command)
         if filename is not None:
             os.system(filename)
             continue
