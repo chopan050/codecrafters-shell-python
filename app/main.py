@@ -17,7 +17,6 @@ def on_type(args):
         if not p.endswith("/"):
             p += "/"
         filename = p + command
-        print(filename)
         if os.path.exists(filename):
             print(f"{command} is {filename}")
             return
