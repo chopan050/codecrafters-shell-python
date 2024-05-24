@@ -24,7 +24,7 @@ def run_builtin_echo(args: list[str]) -> None:
 
 def run_builtin_type(args: list[str]) -> None:
     command = args[1]
-    if command in builtins:
+    if command in shell_builtins:
         print(f"{command} is a shell builtin")
         return
     
