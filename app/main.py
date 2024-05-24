@@ -53,7 +53,7 @@ def main() -> None:
 
         filename = find_in_filesystem(command)
         if filename is not None:
-            os.system(filename)
+            os.system(" ".join([filename] + args[1:]))
             continue
 
         print(f"{command}: command not found")
