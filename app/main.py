@@ -60,8 +60,7 @@ def main() -> None:
         sys.stdout.flush()
         # Wait for user input
         args = input().split()
-        command = args[0]
-        action = builtins.get(command, default)
+        action = builtins.get(args[0], run_default)
         action(args)
 
 
