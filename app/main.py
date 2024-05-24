@@ -16,7 +16,13 @@ def find_in_path(command: str) -> str | None:
 
     return None
 
-def on_type(args: list[str]) -> None:
+def run_builtin_exit(args: list[str]) -> None:
+    sys.exit(int(args[1]))
+
+def run_builtin_echo(args: list[str]) -> None:
+    print(" ".join(args[1:]))
+
+def run_builtin_type(args: list[str]) -> None:
     command = args[1]
     if command in builtins:
         print(f"{command} is a shell builtin")
@@ -29,12 +35,24 @@ def on_type(args: list[str]) -> None:
     
     print(f"{command}: not found")
 
-builtins = {
-    "exit": lambda args: sys.exit(int(args[1])),
-    "echo": lambda args: print(" ".join(args[1:])),
-    "type": on_type,
-}
+def run_default(args: list[str]) -> None:
+    command = args[0]
+    if os.path.exists(command):
+        filename = command
+    else:
+        filename = find_in_path(command)
+    if filename is not None:
+        os.system(" ".join([filename] + args[1:]))
+        return
 
+    print(f"{command}: command not found")
+
+
+builtins = {
+    "exit": run_builtin_exit,
+    "echo": run_builtin_echo,
+    "type": run_builtin_type,
+}
 
 def main() -> None:
     while True:
@@ -43,20 +61,8 @@ def main() -> None:
         # Wait for user input
         args = input().split()
         command = args[0]
-        action = builtins.get(command)
-        if action is not None:
-            action(args)
-            continue
-
-        if os.path.exists(command):
-            filename = command
-        else:
-            filename = find_in_path(command)
-        if filename is not None:
-            os.system(" ".join([filename] + args[1:]))
-            continue
-
-        print(f"{command}: command not found")
+        action = builtins.get(command, default)
+        action(args)
 
 
 if __name__ == "__main__":
